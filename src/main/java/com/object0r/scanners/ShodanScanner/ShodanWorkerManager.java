@@ -1,8 +1,7 @@
 package com.object0r.scanners.ShodanScanner;
 
-import com.object0r.TorRange.TorWorkerManager;
-
-import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.object0r.TorRange.ProxyWorkerManager;
+ import com.gargoylesoftware.htmlunit.BrowserVersion;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.LogFactory;
@@ -19,7 +18,7 @@ import java.io.PrintWriter;
 import java.util.*;
 import java.util.logging.Level;
 
-public class ShodanWorkerManager extends TorWorkerManager
+public class ShodanWorkerManager extends ProxyWorkerManager
 {
     //Max pages even with a subscription.
     public static final int MAX_PAGES = 1000;
