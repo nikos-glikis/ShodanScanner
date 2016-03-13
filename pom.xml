@@ -42,7 +42,7 @@
     <build>
         <resources>
             <resource>
-                <directory>./input/</directory>
+                <directory>./</directory>
                 <includes>
                     <include>cities.json</include>
                 </includes>

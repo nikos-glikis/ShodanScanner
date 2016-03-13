@@ -262,7 +262,7 @@ public class ShodanWorkerManager extends ProxyWorkerManager
             if (file == null || !file.exists())
             {
                 //InputStream is = getClass( ).getResourceAsStream("cities.json");
-                InputStream is = getClass().getResourceAsStream("/cities.json");
+                InputStream is = getClass().getResourceAsStream("cities.json");
                 text = IOUtils.toString(is, "UTF-8");
             }
             else
