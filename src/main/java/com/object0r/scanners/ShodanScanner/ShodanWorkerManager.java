@@ -97,7 +97,7 @@ public class ShodanWorkerManager extends ProxyWorkerManager
     {
         try
         {
-            getCities();
+            loadCities();
             Ini prefs = new Ini(new File(filename));
             this.query = (prefs.get("Shodan", "query"));
             //this.cookie = (prefs.get("Shodan", "cookie"));
@@ -250,7 +250,7 @@ public class ShodanWorkerManager extends ProxyWorkerManager
         }
     }
 
-    public Vector<Country> getCities()
+    public Vector<Country> loadCities()
     {
         //CountriesToCities.json
         Vector<Country> countries = new Vector<Country>();
@@ -302,7 +302,7 @@ public class ShodanWorkerManager extends ProxyWorkerManager
         try
         {
             String[] countries = getCountriesList();
-            //Vector cities = getCities();
+            //Vector cities = loadCities();
             //System.out.println(cities.size());
 
             urlsGroupsToScan = new Vector<String>();
@@ -319,7 +319,7 @@ public class ShodanWorkerManager extends ProxyWorkerManager
                 urlsGroupsToScan.add(url);
             }
 
-            Vector<Country> countriesCities = getCities();
+            Vector<Country> countriesCities = loadCities();
 
             Collections.shuffle(countriesCities);
 

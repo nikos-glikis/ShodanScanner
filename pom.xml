@@ -67,6 +67,14 @@
             </plugin>
 
         </plugins>
-
+        <resources>
+            <resource>
+                <directory>${basedir}/input</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>cities.json</include>
+                </includes>
+            </resource>
+        </resources>
     </build>
 </project>
