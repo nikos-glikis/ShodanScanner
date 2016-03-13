@@ -40,14 +40,7 @@
         </dependency>
     </dependencies>
     <build>
-        <resources>
-            <resource>
-                <directory>./</directory>
-                <includes>
-                    <include>cities.json</include>
-                </includes>
-            </resource>
-        </resources>
+
         <plugins>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
