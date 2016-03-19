@@ -1,6 +1,7 @@
 package com.object0r.scanners.ShodanScanner;
 
 
+import java.io.File;
 import java.util.Vector;
 
 public class Main
@@ -17,6 +18,7 @@ public class Main
 
         try
         {
+
             ShodanWorkerManager shodanWorkerManager = new ShodanWorkerManager(args[0]);
 
             while (true)

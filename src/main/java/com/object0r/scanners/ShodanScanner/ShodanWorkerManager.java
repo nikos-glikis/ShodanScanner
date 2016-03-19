@@ -28,7 +28,7 @@ public class ShodanWorkerManager extends ProxyWorkerManager
     String shodanPassword;
     static Vector<String> urls = new Vector<String>();
     static Vector<String> freshUrls = new Vector<String>();
-
+    static boolean useTorOnLogin = false;
     final String pagePlaceholder = "{{page}}";
 
     Vector<String> urlsGroupsToScan;
@@ -60,6 +60,9 @@ public class ShodanWorkerManager extends ProxyWorkerManager
         {
             new ShodanWorker( this, i).start();
             try { Thread.sleep(500); } catch (Exception e) {}
+        }
+        if (new File("output/").exists()) {
+            new File("output/").mkdirs();
         }
     }
 
@@ -106,10 +109,23 @@ public class ShodanWorkerManager extends ProxyWorkerManager
             {
                 shodanUsername = prefs.get("Shodan", "shodanUsername");
                 shodanPassword = prefs.get("Shodan", "shodanPassword");
+
             } catch (Exception e)
             {
                 e.printStackTrace();
             }
+
+            try
+            {
+                String loginProxy = prefs.get("Shodan", "useTorOnLogin");
+                useTorOnLogin = Boolean.parseBoolean(loginProxy);
+            }
+            catch (Exception e)
+            {
+                //e.printStackTrace();
+            }
+
+            System.out.println("Use Tor On Login: "+useTorOnLogin);
 
             if (System.getenv("shodanUsername") != null && System.getenv("shodanPassword") != null)
             {
@@ -142,7 +158,7 @@ public class ShodanWorkerManager extends ProxyWorkerManager
             if (this.useTor())
             {
                 System.out.println("Communication is over tor. Make sure that tor service is enabled and that tor executable is added in the system PATH.");
-                htmlUnitDriver.setSocksProxy("localhost", 9050);
+                //htmlUnitDriver.setSocksProxy("localhost", 9050);
             }
 
             java.util.logging.Logger.getLogger("com.gargoylesoftware.htmlunit").setLevel(Level.OFF);
@@ -152,7 +168,13 @@ public class ShodanWorkerManager extends ProxyWorkerManager
 
             //htmlUnitDriver.get("https://www.shodan.io/");
             htmlUnitDriver.get("https://account.shodan.io/login");
+
             Thread.sleep(5000);
+            if (htmlUnitDriver.getPageSource().contains("Please complete the security check to access"))
+            {
+                System.out.println("There is a captcha in the page. This sometimes happens with tor. Disable TOR in shodan.ini or restart tor service.");
+                System.exit(-1);
+            }
             htmlUnitDriver.findElement(By.name("username")).sendKeys(shodanUsername);
             htmlUnitDriver.findElement(By.name("password")).sendKeys(shodanPassword);
             htmlUnitDriver.findElement(By.name("login_submit")).submit();
@@ -179,7 +201,9 @@ public class ShodanWorkerManager extends ProxyWorkerManager
                 this.cookie = this.cookie.substring(0, this.cookie.length() - 2);
                 System.out.println("Cookie set to: " + this.cookie);
             }
-        } catch (Exception e)
+        }
+
+        catch (Exception e)
         {
             e.printStackTrace();
             System.out.println("Something wrong happened.");
