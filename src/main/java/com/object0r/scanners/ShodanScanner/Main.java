@@ -8,7 +8,8 @@ public class Main
 {
     public static void main(String[] args)
     {
-        if (args.length == 0) {
+        if (args.length == 0)
+        {
             System.out.println("No session ini in arguments.");
             System.out.println("Usage: ");
             System.out.println("java -cp java -cp out/production/TorRange-ripper/:lib/* com.circles.rippers.TorRange.Main example.ini");
@@ -18,9 +19,7 @@ public class Main
 
         try
         {
-
             ShodanWorkerManager shodanWorkerManager = new ShodanWorkerManager(args[0]);
-
             while (true)
             {
                 try
@@ -35,7 +34,8 @@ public class Main
                 }
                 catch (Exception e)
                 {
-                    e.printStackTrace();;
+                    e.printStackTrace();
+                    ;
                 }
             }
         }

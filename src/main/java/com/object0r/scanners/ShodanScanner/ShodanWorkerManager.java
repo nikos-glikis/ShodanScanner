@@ -105,7 +105,7 @@ public class ShodanWorkerManager extends ProxyWorkerManager
             Ini prefs = new Ini(new File(filename));
             this.query = (prefs.get("Shodan", "query"));
             //this.cookie = (prefs.get("Shodan", "cookie"));
-            System.out.println(prefs.get("Shodan", "query"));
+            System.out.println("Searching shodan for: "+prefs.get("Shodan", "query"));
             try
             {
                 shodanUsername = prefs.get("Shodan", "shodanUsername");
