@@ -62,10 +62,10 @@ public class ShodanWorker extends TorWorker
                     globalCount++;
                     manager.addUrls(thisUrls);
                     thisUrls = new Vector<String>();
-                    if (globalCount % 30 == 0)
+                    /*if (globalCount % 30 == 0)
                     {
-                        System.out.println("ShodanScanner: Collected "+manager.getUrlsCount()+" up until now.");
-                    }
+
+                    }*/
 
                     if (globalCount % 500 == 0)
                     {

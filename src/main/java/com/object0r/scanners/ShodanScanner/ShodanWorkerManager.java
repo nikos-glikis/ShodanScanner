@@ -1,7 +1,7 @@
 package com.object0r.scanners.ShodanScanner;
 
 import com.object0r.TorRange.ProxyWorkerManager;
- import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.gargoylesoftware.htmlunit.BrowserVersion;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.LogFactory;
@@ -27,6 +27,7 @@ public class ShodanWorkerManager extends ProxyWorkerManager
     String query;
     String shodanUsername;
     String shodanPassword;
+    int sleepBetweenReportsSeconds = 40000;
     static Vector<String> urls = new Vector<String>();
     static Vector<String> freshUrls = new Vector<String>();
     static boolean useTorOnLogin = false;
@@ -57,13 +58,51 @@ public class ShodanWorkerManager extends ProxyWorkerManager
     public ShodanWorkerManager(String iniFilename)
     {
         super(iniFilename);
-        for (int i = 0 ; i < this.getThreadCount(); i++)
+        for (int i = 0; i < this.getThreadCount(); i++)
         {
-            new ShodanWorker( this, i).start();
-            try { Thread.sleep(500); } catch (Exception e) {}
+            new ShodanWorker(this, i).start();
+            try
+            {
+                Thread.sleep(500);
+            }
+            catch (Exception e)
+            {
+            }
         }
-        if (!new File("output/").exists()) {
+        if (!new File("output/").exists())
+        {
             new File("output/").mkdirs();
+        }
+
+        startPrintingReports();
+    }
+
+    private void startPrintingReports()
+    {
+        try
+        {
+            new Thread()
+            {
+                public void run()
+                {
+                    while (true)
+                    {
+                        System.out.println("ShodanScanner: Collected " + getUrlsCount() + " up until now.");
+                        try
+                        {
+                            Thread.sleep(sleepBetweenReportsSeconds*1000);
+                        }
+                        catch (InterruptedException e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            };
+        }
+        catch (Exception e)
+        {
+
         }
     }
 
@@ -83,8 +122,7 @@ public class ShodanWorkerManager extends ProxyWorkerManager
                 e.printStackTrace();
             }
             return getNextEntry();
-        }
-        else
+        } else
         {
             return urlsGroupsToScan.get(index++);
         }
@@ -105,13 +143,14 @@ public class ShodanWorkerManager extends ProxyWorkerManager
             Ini prefs = new Ini(new File(filename));
             this.query = (prefs.get("Shodan", "query"));
             //this.cookie = (prefs.get("Shodan", "cookie"));
-            System.out.println("Searching shodan for: "+prefs.get("Shodan", "query"));
+            System.out.println("Searching shodan for: " + prefs.get("Shodan", "query"));
             try
             {
                 shodanUsername = prefs.get("Shodan", "shodanUsername");
                 shodanPassword = prefs.get("Shodan", "shodanPassword");
 
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 e.printStackTrace();
             }
@@ -126,7 +165,7 @@ public class ShodanWorkerManager extends ProxyWorkerManager
                 //e.printStackTrace();
             }
 
-            System.out.println("Use Tor On Login: "+useTorOnLogin);
+            System.out.println("Use Tor On Login: " + useTorOnLogin);
 
             if (System.getenv("shodanUsername") != null && System.getenv("shodanPassword") != null)
             {
@@ -185,8 +224,7 @@ public class ShodanWorkerManager extends ProxyWorkerManager
             {
                 System.out.println("Seems that password is incorrect. Please correct and rerun.");
                 Thread.sleep(10000);
-            }
-            else
+            } else
             {
                 System.out.println("Login was successful.");
                 this.cookie = "";
@@ -219,8 +257,7 @@ public class ShodanWorkerManager extends ProxyWorkerManager
         if (shodanPassword == null || shodanUsername == null)
         {
             return false;
-        }
-        else
+        } else
         {
             return true;
         }
@@ -285,8 +322,7 @@ public class ShodanWorkerManager extends ProxyWorkerManager
             if (new File("input/largeCities.txt").exists())
             {
                 sc = new Scanner(new FileInputStream("input/largeCities.txt"));
-            }
-            else
+            } else
             {
                 sc = new Scanner(getClass().getResourceAsStream("/largeCities.txt"));
             }
@@ -316,8 +352,7 @@ public class ShodanWorkerManager extends ProxyWorkerManager
                 //InputStream is = getClass( ).getResourceAsStream("cities.json");
                 InputStream is = getClass().getResourceAsStream("/cities.json");
                 text = IOUtils.toString(is, "UTF-8");
-            }
-            else
+            } else
             {
                 text = FileUtils.readFileToString(file, "UTF-8");
             }
