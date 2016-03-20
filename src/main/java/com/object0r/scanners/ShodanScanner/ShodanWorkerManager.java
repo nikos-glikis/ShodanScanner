@@ -98,7 +98,7 @@ public class ShodanWorkerManager extends ProxyWorkerManager
                         }
                     }
                 }
-            };
+            }.start();
         }
         catch (Exception e)
         {
