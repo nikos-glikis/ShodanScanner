@@ -1,7 +1,9 @@
 ShodanScanner
 =============
 
-ShodanScanner is a multithreaded shodan search results exporter.
+ShodanScanner is a multithreaded shodan search results exporter. It uses some clever tricks to bypass limitations in results and returns lots of results for specific searches even with a free account.
+
+It does not need a payed account, but if you have one the number of the results returned are even greater.
 
 Set shodan.ini with the appropriate options.
 
