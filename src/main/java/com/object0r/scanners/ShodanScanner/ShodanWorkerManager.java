@@ -238,7 +238,8 @@ public class ShodanWorkerManager extends ProxyWorkerManager
 
     public synchronized Vector<String> getAndCleanFresh()
     {
-        Vector<String> returnVector = this.freshUrls;
+        Vector<String> returnVector = new Vector<String>(freshUrls);
+
         freshUrls = new Vector<String>();
         return returnVector;
     }
