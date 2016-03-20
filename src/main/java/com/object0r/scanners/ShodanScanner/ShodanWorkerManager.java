@@ -13,6 +13,7 @@ import org.openqa.selenium.Cookie;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.*;
@@ -61,7 +62,7 @@ public class ShodanWorkerManager extends ProxyWorkerManager
             new ShodanWorker( this, i).start();
             try { Thread.sleep(500); } catch (Exception e) {}
         }
-        if (new File("output/").exists()) {
+        if (!new File("output/").exists()) {
             new File("output/").mkdirs();
         }
     }
@@ -169,7 +170,7 @@ public class ShodanWorkerManager extends ProxyWorkerManager
             //htmlUnitDriver.get("https://www.shodan.io/");
             htmlUnitDriver.get("https://account.shodan.io/login");
 
-            Thread.sleep(5000);
+            Thread.sleep(2000);
             if (htmlUnitDriver.getPageSource().contains("Please complete the security check to access"))
             {
                 System.out.println("There is a captcha in the page. This sometimes happens with tor. Disable TOR in shodan.ini or restart tor service.");
@@ -275,6 +276,24 @@ public class ShodanWorkerManager extends ProxyWorkerManager
         }
     }
 
+    public Vector<String> getLargeCities()
+    {
+        Vector<String> cities = new Vector<String>();
+        try
+        {
+            Scanner sc = new Scanner(new FileInputStream("input/largeCities.txt"));
+            while (sc.hasNext())
+            {
+                cities.add(sc.nextLine());
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return cities;
+    }
+
     public Vector<Country> loadCities()
     {
         //CountriesToCities.json
@@ -341,6 +360,14 @@ public class ShodanWorkerManager extends ProxyWorkerManager
             for (String country : countries)
             {
                 String url = "https://www.shodan.io/search?query=" + query + "+country%3A\"" + country + "\"&page=" + pagePlaceholder;
+                urlsGroupsToScan.add(url);
+            }
+
+            Vector<String> largeCities = getLargeCities();
+
+            for (String largeCity : largeCities)
+            {
+                String url = "https://www.shodan.io/search?query=" + query + "+city%3A\"" + largeCity + "\"&page=" + pagePlaceholder;
                 urlsGroupsToScan.add(url);
             }
 

@@ -73,6 +73,7 @@
                 <filtering>false</filtering>
                 <includes>
                     <include>cities.json</include>
+                    <include>largeCities.txt</include>
                 </includes>
             </resource>
         </resources>
