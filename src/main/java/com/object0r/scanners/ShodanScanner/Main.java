@@ -29,7 +29,7 @@ public class Main
                     Vector<String> results = shodanWorkerManager.getAndCleanFresh();
                     for (String ip : results)
                     {
-                        System.out.println(ip);
+                        //System.out.println(ip);
                     }
                     Thread.sleep(5000);
                 }

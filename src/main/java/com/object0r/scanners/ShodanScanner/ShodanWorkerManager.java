@@ -281,7 +281,15 @@ public class ShodanWorkerManager extends ProxyWorkerManager
         Vector<String> cities = new Vector<String>();
         try
         {
-            Scanner sc = new Scanner(new FileInputStream("input/largeCities.txt"));
+            Scanner sc;
+            if (new File("input/largeCities.txt").exists())
+            {
+                sc = new Scanner(new FileInputStream("input/largeCities.txt"));
+            }
+            else
+            {
+                sc = new Scanner(getClass().getResourceAsStream("/largeCities.txt"));
+            }
             while (sc.hasNext())
             {
                 cities.add(sc.nextLine());
