@@ -31,3 +31,31 @@ Set shodan.ini with the appropriate options.
 Then run Main class with shodan.ini as argument to collect. 
 
 Main.java is a complete example.
+
+Build
+-----
+
+1) Install dependencies 
+    
+    sudo apt-get update
+    sudo apt-get install tor maven git openjdk-7-jdk openjdk-7-jre
+    
+2) Start tor:
+    
+    sudo service tor start
+    
+    
+3) Install and run ccSnapTv
+
+    git clone https://github.com/nikos-glikis/ShodanScanner.git
+    cd ShodanScanner
+    #./build.sh
+    mvn clean compile assembly:single
+    
+Run:
+-----
+
+    #./start.sh
+    java -jar target/ShodanScanner-1.0.1-jar-with-dependencies.jar shodan.ini
+    
+    

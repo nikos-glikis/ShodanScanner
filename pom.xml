@@ -47,7 +47,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>fully.qualified.MainClass</mainClass>
+                            <mainClass>com.object0r.scanners.ShodanScanner.Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
