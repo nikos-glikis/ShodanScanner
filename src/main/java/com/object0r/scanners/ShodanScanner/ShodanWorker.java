@@ -1,5 +1,6 @@
 package com.object0r.scanners.ShodanScanner;
 
+import com.object0r.TorRange.ProxyWorkerManager;
 import com.object0r.TorRange.TorWorker;
 import com.object0r.toortools.Utilities;
 
@@ -18,10 +19,10 @@ public class ShodanWorker extends TorWorker
     int getErrorsLimit = 5;
     static int globalCount = 0;
 
-    public ShodanWorker(ShodanWorkerManager manager, int id)
+    public ShodanWorker(ProxyWorkerManager manager, int id)
     {
         super(manager, id);
-        this.manager = manager;
+        this.manager = (ShodanWorkerManager)manager;
     }
 
     @Override

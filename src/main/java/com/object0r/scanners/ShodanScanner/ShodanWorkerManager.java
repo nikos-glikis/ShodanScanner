@@ -27,7 +27,7 @@ public class ShodanWorkerManager extends ProxyWorkerManager
     String query;
     String shodanUsername;
     String shodanPassword;
-    int sleepBetweenReportsSeconds = 40000;
+    int sleepBetweenReportsSeconds = 40;
     static Vector<String> urls = new Vector<String>();
     static Vector<String> freshUrls = new Vector<String>();
     static boolean useTorOnLogin = false;
@@ -55,20 +55,10 @@ public class ShodanWorkerManager extends ProxyWorkerManager
         return countries;
     }
 
-    public ShodanWorkerManager(String iniFilename)
+    public ShodanWorkerManager(String iniFilename, Class workerClass)
     {
-        super(iniFilename);
-        for (int i = 0; i < this.getThreadCount(); i++)
-        {
-            new ShodanWorker(this, i).start();
-            try
-            {
-                Thread.sleep(500);
-            }
-            catch (Exception e)
-            {
-            }
-        }
+        super(iniFilename, workerClass);
+
         if (!new File("output/").exists())
         {
             new File("output/").mkdirs();
@@ -122,7 +112,8 @@ public class ShodanWorkerManager extends ProxyWorkerManager
                 e.printStackTrace();
             }
             return getNextEntry();
-        } else
+        }
+        else
         {
             return urlsGroupsToScan.get(index++);
         }
