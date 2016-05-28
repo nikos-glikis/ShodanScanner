@@ -38,6 +38,10 @@ Build
 1) Install dependencies 
     
     sudo apt-get update
+        
+    #remove maven2
+    sudo apt-get remove maven2
+    
     sudo apt-get install tor maven git openjdk-7-jdk openjdk-7-jre
     
 2) Start tor:
