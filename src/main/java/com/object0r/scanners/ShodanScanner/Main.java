@@ -19,7 +19,7 @@ public class Main
 
         try
         {
-            ShodanWorkerManager shodanWorkerManager = new ShodanWorkerManager(args[0] , ShodanWorker.class);
+            ShodanWorkerManager shodanWorkerManager = new ShodanWorkerManager(args[0]);
             shodanWorkerManager.startWorkers();
             while (true)
             {

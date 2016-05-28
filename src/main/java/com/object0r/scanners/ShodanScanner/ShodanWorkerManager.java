@@ -55,6 +55,12 @@ public class ShodanWorkerManager extends ProxyWorkerManager
         return countries;
     }
 
+    public ShodanWorkerManager(String iniFilename)
+    {
+        this(iniFilename, ShodanWorker.class);
+        this.startWorkers();
+    }
+
     public ShodanWorkerManager(String iniFilename, Class workerClass)
     {
         super(iniFilename, workerClass);
