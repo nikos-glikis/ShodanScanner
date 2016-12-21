@@ -27,13 +27,17 @@ public class ShodanWorkerManager extends ProxyWorkerManager
     String query;
     String shodanUsername;
     String shodanPassword;
-    int sleepBetweenReportsSeconds = 40;
+    static int sleepBetweenReportsSeconds = 40;
+    static int sleepBetweenWritesSeconds = 60;
     static Vector<String> urls = new Vector<String>();
     static Vector<String> freshUrls = new Vector<String>();
     static boolean useTorOnLogin = false;
     final String pagePlaceholder = "{{page}}";
 
     Vector<String> urlsGroupsToScan;
+    static private String outputDir = "output";
+    static private String outputFile = "urls.txt";
+
 
     public long getDoneCount()
     {
@@ -58,16 +62,39 @@ public class ShodanWorkerManager extends ProxyWorkerManager
     public ShodanWorkerManager(String iniFilename)
     {
         this(iniFilename, ShodanWorker.class);
+        startWriteResultsThread();
         this.startWorkers();
+    }
+
+    private void startWriteResultsThread()
+    {
+        new Thread()
+        {
+            public void run()
+            {
+                while (true)
+                {
+                    try
+                    {
+                        Thread.sleep(sleepBetweenWritesSeconds * 1000);
+                        writeResults();
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.start();
     }
 
     public ShodanWorkerManager(String iniFilename, Class workerClass)
     {
         super(iniFilename, workerClass);
 
-        if (!new File("output/").exists())
+        if (!new File(outputDir).exists())
         {
-            new File("output/").mkdirs();
+            new File(outputDir).mkdirs();
         }
 
         startPrintingReports();
@@ -86,7 +113,7 @@ public class ShodanWorkerManager extends ProxyWorkerManager
                         System.out.println("ShodanScanner: Collected " + getUrlsCount() + " up until now.");
                         try
                         {
-                            Thread.sleep(sleepBetweenReportsSeconds*1000);
+                            Thread.sleep(sleepBetweenReportsSeconds * 1000);
                         }
                         catch (InterruptedException e)
                         {
@@ -104,6 +131,12 @@ public class ShodanWorkerManager extends ProxyWorkerManager
 
     int index = 0;
 
+    private synchronized void writeResults()
+    {
+
+        writeVectorToFile(getUrls(), getFullOutputFile());
+    }
+
     public synchronized String getNextEntry()
     {
         if (index >= urlsGroupsToScan.size())
@@ -111,6 +144,7 @@ public class ShodanWorkerManager extends ProxyWorkerManager
             try
             {
                 Thread.sleep(90000);
+                writeResults();
                 System.exit(0);
             }
             catch (Exception e)
@@ -139,6 +173,40 @@ public class ShodanWorkerManager extends ProxyWorkerManager
             loadCities();
             Ini prefs = new Ini(new File(filename));
             this.query = (prefs.get("Shodan", "query"));
+
+            String value = prefs.get("Shodan", "sleepBetweenWritesSeconds");
+
+            try
+            {
+                if (value != null && !value.equals(""))
+                {
+                    sleepBetweenWritesSeconds = Integer.parseInt(value);
+                }
+            }
+            catch (Exception e)
+            {
+                System.out.println("sleepBetweenWritesSeconds invalid value: " + value);
+                e.printStackTrace();
+            }
+
+            value = prefs.get("Shodan", "outputFile");
+
+            try
+            {
+                if (value != null && !value.equals(""))
+                {
+                    outputFile = value;
+                }
+            }
+            catch (Exception e)
+            {
+                System.out.println("sleepBetweenWritesSeconds invalid value: " + getFullOutputFile());
+                e.printStackTrace();
+            }
+
+
+            System.out.println("Output is writtern every " + sleepBetweenWritesSeconds + " seconds to output file: " + outputFile);
+
             //this.cookie = (prefs.get("Shodan", "cookie"));
             System.out.println("Searching shodan for: " + prefs.get("Shodan", "query"));
             try
@@ -221,7 +289,8 @@ public class ShodanWorkerManager extends ProxyWorkerManager
             {
                 System.out.println("Seems that password is incorrect. Please correct and rerun.");
                 Thread.sleep(10000);
-            } else
+            }
+            else
             {
                 System.out.println("Login was successful.");
                 this.cookie = "";
@@ -254,7 +323,8 @@ public class ShodanWorkerManager extends ProxyWorkerManager
         if (shodanPassword == null || shodanUsername == null)
         {
             return false;
-        } else
+        }
+        else
         {
             return true;
         }
@@ -282,6 +352,11 @@ public class ShodanWorkerManager extends ProxyWorkerManager
     public synchronized int getUrlsCount()
     {
         return urls.size();
+    }
+
+    private String getFullOutputFile()
+    {
+        return outputDir + "/" + outputFile;
     }
 
     class Country
@@ -319,7 +394,8 @@ public class ShodanWorkerManager extends ProxyWorkerManager
             if (new File("input/largeCities.txt").exists())
             {
                 sc = new Scanner(new FileInputStream("input/largeCities.txt"));
-            } else
+            }
+            else
             {
                 sc = new Scanner(getClass().getResourceAsStream("/largeCities.txt"));
             }
@@ -349,7 +425,8 @@ public class ShodanWorkerManager extends ProxyWorkerManager
                 //InputStream is = getClass( ).getResourceAsStream("cities.json");
                 InputStream is = getClass().getResourceAsStream("/cities.json");
                 text = IOUtils.toString(is, "UTF-8");
-            } else
+            }
+            else
             {
                 text = FileUtils.readFileToString(file, "UTF-8");
             }
@@ -437,6 +514,7 @@ public class ShodanWorkerManager extends ProxyWorkerManager
     {
         try
         {
+            System.out.println("Writting results to file " + filename);
             PrintWriter pr = new PrintWriter(filename);
             for (String url : urls)
             {
