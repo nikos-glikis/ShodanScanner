@@ -27,6 +27,10 @@ Set shodan.ini with the appropriate options.
     query=JAWS/1.0
     shodanUsername=shodanUsername
     shodanPassword=shodanPassword
+    #results are written to output/urls.txt every {sleepBetweenWritesSeconds} seconds
+    sleepBetweenWritesSeconds = 32
+    #where to write the results. This path is relative to output.
+    outputFile = urls.txt
     
 Then run Main class with shodan.ini as argument to collect. 
 
@@ -61,5 +65,10 @@ Run:
 
     #./start.sh
     java -jar target/ShodanScanner-1.0.1-jar-with-dependencies.jar shodan.ini
-    
+
+Output:
+-------
+   
+Output is flushed every 30 seconds in the output/urls directory. Both of those values are configurable in the shodan.ini file.
+
     
