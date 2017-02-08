@@ -45,7 +45,7 @@ public class ShodanWorker extends TorWorker
                     httpRequestInformation.setUrl(url);
                     httpRequestInformation.setCookie(manager.getCookie());
                     httpRequestInformation.setMethodGet();
-                    httpRequestInformation.setUserAgent(Utilities.getBrowserUserAgent());
+                    httpRequestInformation.setHeader("User-Agent", Utilities.getBrowserUserAgent());
                     HttpResult httpResult = HttpHelper.request(httpRequestInformation);
                     String page = httpResult.getContentAsString();
 
