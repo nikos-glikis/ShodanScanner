@@ -65,6 +65,12 @@ Run:
 
     #./start.sh
     java -jar target/ShodanScanner-1.0.1-jar-with-dependencies.jar shodan.ini
+   
+Parameters:
+------
+You query must be in: query= field under [Shodan] in you ini.
+
+In the example above ShodanScanner will search for JAWS/1.0
 
 Output:
 -------
